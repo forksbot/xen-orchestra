@@ -1,0 +1,13 @@
+blockList = [
+  'acl.getCurrentPermissions',
+  'resourceSet.getAll',
+  'session.getUser',
+  'system.getMethodsInfo',
+  'system.getServerTimezone',
+  'system.getServerVersion',
+  'system.listMethods',
+  'vm.stats',
+  'host.stats',
+  'sr.stats',
+  'xo.getAllObjects',
+]

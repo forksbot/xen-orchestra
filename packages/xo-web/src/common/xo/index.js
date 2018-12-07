@@ -3109,3 +3109,17 @@ export const checkProxyHealth = proxy =>
       _('proxyTestSuccessMessage')
     )
   )
+
+// Audit plugin ---------------------------------------------------------
+
+export const subscribeAuditRecords = createSubscription(async () => {
+  const { $getFrom } = await _call('audit.getRecords', { ndjson: true })
+  const response = await fetch(`.${$getFrom}`)
+  const data = await response.text()
+
+  const records = []
+  parseNdJson(data, record => {
+    records.push(record)
+  })
+  return records
+})

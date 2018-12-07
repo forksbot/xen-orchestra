@@ -255,11 +255,11 @@ export default class Api {
         .slice(2),
       userId,
       userName,
+      userIp: session.get('user_ip'),
       method: name,
       params: sensitiveValues.replace(params, '* obfuscated *'),
       timestamp: Date.now(),
     }
-
     xo.emit('xo:preCall', data)
 
     try {
