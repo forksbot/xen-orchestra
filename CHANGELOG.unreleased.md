@@ -8,6 +8,7 @@
 > Users must be able to say: “Nice enhancement, I'm eager to test it”
 
 - [New VM] Ability to set VM max vCPUS [#4703](https://github.com/vatesfr/xen-orchestra/issues/4703) (PR [#4729](https://github.com/vatesfr/xen-orchestra/pull/4729))
+- [SR/general] Add a link to the disks group [#4747](https://github.com/vatesfr/xen-orchestra/issues/4747) (PR [#4754](https://github.com/vatesfr/xen-orchestra/pull/4754))
 
 ### Bug fixes
 
