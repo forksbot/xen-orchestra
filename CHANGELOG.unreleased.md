@@ -8,6 +8,7 @@
 > Users must be able to say: “Nice enhancement, I'm eager to test it”
 
 - [New VM] Ability to set VM max vCPUS [#4703](https://github.com/vatesfr/xen-orchestra/issues/4703) (PR [#4729](https://github.com/vatesfr/xen-orchestra/pull/4729))
+- [New VM] Ability to copy host bios strings [#4204](https://github.com/vatesfr/xen-orchestra/issues/4204) (PR [4755](https://github.com/vatesfr/xen-orchestra/pull/4755))
 
 ### Bug fixes
 
