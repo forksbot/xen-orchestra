@@ -1352,6 +1352,7 @@ const messages = {
   coreOsDefaultTemplateError:
     'Error on getting the default coreOS cloud template',
   newVmBootAfterCreate: 'Boot VM after creation',
+  newVmCopyHostBiosStrings: 'Copy host BIOS strings',
   newVmMacPlaceholder: 'Auto-generated if empty',
   newVmCpuWeightLabel: 'CPU weight',
   newVmDefaultCpuWeight: 'Default: {value, number}',
