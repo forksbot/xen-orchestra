@@ -3123,3 +3123,9 @@ export const subscribeAuditRecords = createSubscription(async () => {
   })
   return records
 })
+
+export const checkAuditRecordsIntegrity = (oldest, newest) =>
+  _call('audit.checkIntegrity', { oldest, newest })
+
+export const generateNewAuditHash = oldest =>
+  _call('audit.generateNewHash', { oldest })

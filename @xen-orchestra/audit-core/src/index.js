@@ -4,6 +4,7 @@ import 'core-js/features/symbol/async-iterator'
 import assert from 'assert'
 import defer from 'golike-defer'
 import hash from 'object-hash'
+import { alteredAuditRecord, missingAuditRecord } from 'xo-common/api-errors'
 
 export class Storage {
   constructor() {
@@ -67,23 +68,21 @@ export class AuditCore {
 
   // TODO: https://github.com/vatesfr/xen-orchestra/pull/4733#discussion_r366897798
   async checkIntegrity(oldest, newest) {
+    let nValid = 0
     while (newest !== oldest) {
       const record = await this._storage.get(newest)
       if (record === undefined) {
-        const error = new Error('missing record')
-        error.id = newest
-        throw error
+        throw missingAuditRecord({ id: newest, nValid })
       }
       if (
         newest !== createHash(record, newest.slice(1, newest.indexOf('$', 1)))
       ) {
-        const error = new Error('altered record')
-        error.id = newest
-        error.record = record
-        throw error
+        throw alteredAuditRecord({ id: newest, record, nValid })
       }
       newest = record.previousId
+      nValid++
     }
+    return nValid
   }
 
   async *getFrom(newest) {

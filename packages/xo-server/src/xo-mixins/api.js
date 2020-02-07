@@ -260,6 +260,7 @@ export default class Api {
       params: sensitiveValues.replace(params, '* obfuscated *'),
       timestamp: Date.now(),
     }
+
     xo.emit('xo:preCall', data)
 
     try {

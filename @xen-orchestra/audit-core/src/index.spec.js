@@ -1,5 +1,7 @@
 /* eslint-env jest */
 
+import { alteredAuditRecord, missingAuditRecord } from 'xo-common/api-errors'
+
 import { AuditCore, NULL_ID, Storage } from '.'
 
 const asyncIteratorToArray = async asyncIterator => {
@@ -82,12 +84,18 @@ describe('auditCore', () => {
   it('detects that a record is missing', async () => {
     const [newestRecord, deletedRecord] = await storeAuditRecords()
 
-    await auditCore.checkIntegrity(NULL_ID, newestRecord.id)
+    const nValidRecords = await auditCore.checkIntegrity(
+      NULL_ID,
+      newestRecord.id
+    )
+    expect(nValidRecords).toBe(DATA.length)
 
     await db.del(deletedRecord.id)
-    await expect(
-      auditCore.checkIntegrity(NULL_ID, newestRecord.id)
-    ).rejects.toThrow('missing record')
+    expect(
+      await auditCore
+        .checkIntegrity(NULL_ID, newestRecord.id)
+        .catch(missingAuditRecord.is)
+    ).toBe(true)
   })
 
   it('detects that a record has been altered', async () => {
@@ -97,9 +105,11 @@ describe('auditCore', () => {
       ...alteredRecord,
       event: '',
     })
-    await expect(
-      auditCore.checkIntegrity(NULL_ID, newestRecord.id)
-    ).rejects.toThrow('altered record')
+    expect(
+      await auditCore
+        .checkIntegrity(NULL_ID, newestRecord.id)
+        .catch(alteredAuditRecord.is)
+    )
   })
 
   it('confirms interval integrity after deletion of records outside of the interval', async () => {

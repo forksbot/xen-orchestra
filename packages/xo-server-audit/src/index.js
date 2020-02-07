@@ -2,7 +2,7 @@ import appConf from 'app-conf'
 import asyncIteratorToStream from 'async-iterator-to-stream'
 import createLogger from '@xen-orchestra/log'
 import path from 'path'
-import { AuditCore, Storage } from '@xen-orchestra/audit-core'
+import { AuditCore, NULL_ID, Storage } from '@xen-orchestra/audit-core'
 import { fromCallback } from 'promise-toolbox'
 import { pipeline } from 'readable-stream'
 
@@ -58,22 +58,37 @@ class AuditXoPlugin {
           appDir: path.join(__dirname, '..'),
         })
       ).blockList
-      this._auditCore = new AuditCore(
-        new DB(await this._xo.getStore(NAMESPACE))
-      )
+      const storage = (this._storage = new DB(
+        await this._xo.getStore(NAMESPACE)
+      ))
+      this._auditCore = new AuditCore(storage)
 
       cleaners.push(() => {
-        this._blockList = undefined
         this._auditCore = undefined
+        this._blockList = undefined
+        this._storage = undefined
       })
     } catch (error) {
-      this._blockList = undefined
       this._auditCore = undefined
+      this._blockList = undefined
+      this._storage = undefined
       throw error
     }
 
-    // this._addListener('xo:postCall', this._handleEvent.bind(this, 'apiCall'))
-    // this._addListener('xo:audit', this._handleEvent.bind(this))
+    this._addListener('xo:postCall', this._handleEvent.bind(this, 'apiCall'))
+    this._addListener('xo:audit', this._handleEvent.bind(this))
+
+    const checkIntegrity = this._checkIntegrity.bind(this)
+    checkIntegrity.description =
+      'Check records integrity from a passed interval'
+    checkIntegrity.permission = 'admin'
+    checkIntegrity.params = {
+      newest: { type: 'string' },
+      oldest: { type: 'string', optional: true },
+    }
+
+    const generateNewHash = this._generateNewHash.bind(this)
+    generateNewHash.description = 'Generate new hash'
 
     const getRecords = this._getRecords.bind(this)
     getRecords.description = 'Get records from a passed record ID'
@@ -86,6 +101,8 @@ class AuditXoPlugin {
     cleaners.push(
       this._xo.addApiMethods({
         audit: {
+          checkIntegrity,
+          generateNewHash,
           getRecords,
         },
       })
@@ -152,6 +169,26 @@ class AuditXoPlugin {
       records.push(record)
     }
     return records
+  }
+
+  _checkIntegrity({ oldest = NULL_ID, newest }) {
+    return this._auditCore.checkIntegrity(oldest, newest)
+  }
+
+  async _generateNewHash({ oldest = NULL_ID }) {
+    const newest = await this._storage.getLastId()
+    const result = await this._auditCore
+      .checkIntegrity(oldest, newest)
+      .catch(error => {
+        if (error.data !== undefined) {
+          oldest = error.data.id
+        }
+        return error
+      })
+    return {
+      result,
+      hash: `${oldest}|${newest}`,
+    }
   }
 }
 

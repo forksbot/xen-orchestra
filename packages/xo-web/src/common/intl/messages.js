@@ -21,6 +21,8 @@ const messages = {
   messageSubject: 'Subject',
   messageFrom: 'From',
   messageReply: 'Reply',
+  ip: 'IP',
+  checkIntegrity: 'Check integrity',
   sr: 'SR',
   tryXoa: 'Try XOA for free and deploy it here.',
 
@@ -47,7 +49,6 @@ const messages = {
   vms: 'VMs',
   metadata: 'Metadata',
   user: 'User',
-  hash: 'Hash',
   data: 'Data',
   chooseBackup: 'Choose a backup',
   temporarilyDisabled: 'Temporarily disabled',
@@ -2218,8 +2219,33 @@ const messages = {
   recipeNetworkCidr: 'Network CIDR',
 
   // Audit
-  noAuditRecordAvailable: 'No audit record available',
   auditActionEvent: 'Action/Event',
+  auditGenerateTrustyInterval: 'Generate trusty interval',
+  auditNewTrustyHash: 'New trusty hash',
+  auditRecord: 'Audit record',
+  auditPutSavedTrustyHash: 'Put saved trusty hash…',
+  auditRecordsIntegrityValid:
+    'Integrity kept for { n, number } checked records',
+  auditMissingRecord:
+    'The record ({ id }) is missing ({ n, number } valid records)',
+  auditAlteredRecord:
+    'The record ({ id }) was altered ({ n, number } valid records)',
+  auditIntegrityCheckErrorTitle: 'Integrity check error',
+  auditIntegrityCheckErrorMessage: 'Error on checking the records integrity',
+  auditClickToCopyNewHash: 'Click to copy the new hash',
+  auditSaveTrustyHash:
+    "Don't forget to save the generated hash to be able to check the integrity of the current records!",
+  auditCopyTrustyHash: 'Copy trusty hash',
+  auditRecordIntegritySucceed: 'Records integrity kept',
+  auditGenerateNewHash: 'Generate a new hash',
+  auditCheckCoherence: 'Check coherence',
+  // TODO; delete
+  checkRecordsIntegritySuccess: 'Records integrity kept',
+  deleteAuditRecords: 'Delete all records starting from this record',
+  displayAuditRecord: 'Display record',
+  newestHash: 'Newest hash',
+  noAuditRecordAvailable: 'No audit record available',
+  oldestHash: 'Oldest hash',
 
   // Licenses
   xosanUnregisteredDisclaimer:
