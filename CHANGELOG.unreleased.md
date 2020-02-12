@@ -12,7 +12,6 @@
 > Users must be able to say: “I had this issue, happy to know it's fixed”
 
 - [Self,IP pools] Fixed the creation being stuck and freezing XO (PR [#4776](https://github.com/vatesfr/xen-orchestra/pull/4776))
-- [New VM] Boot firmware: show confirmation modal for CH/XCP-ng 8.0 hosts [#4749](https://github.com/vatesfr/xen-orchestra/issues/4749) (PR [#4780](https://github.com/vatesfr/xen-orchestra/pull/4780))
 
 ### Released packages
 
