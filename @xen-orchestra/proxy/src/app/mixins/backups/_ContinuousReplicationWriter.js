@@ -6,19 +6,17 @@ import { getOldEntries } from '@xen-orchestra/backups/getOldEntries'
 
 import { listReplicatedVms } from './_listReplicatedVms'
 
-export class DisasterRecoveryWriter {
+export class ContinuousReplicationWriter {
   constructor(backup, sr, settings) {
     this._backup = backup
     this._settings = settings
     this._sr = sr
   }
 
-  async run({ timestamp, stream }) {
-    const sr = this._sr
+  async run({ timestamp, vdiStreams }) {
     const settings = this._settings
     const { job, scheduleId, vm } = this._backup
-
-    const { uuid: srUuid, $xapi: xapi } = sr
+    const { uuid: srUuid, $xapi: xapi, $ref: srRef } = this._sr
 
     // delete previous interrupted copies
     ignoreErrors.call(
@@ -38,9 +36,10 @@ export class DisasterRecoveryWriter {
     if (deleteFirst) {
       await deleteOldBackups()
     }
+
     const targetVm = await xapi.getRecord(
       'VM',
-      await xapi.VM_import(stream, sr.$ref)
+      await xapi.VM_import(stream, srRef)
     )
 
     await Promise.all([
